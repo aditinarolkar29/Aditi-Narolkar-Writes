@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en" class="transition duration-300">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Contact – Aditi Narolkar</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            backgroundLight: '#f9f9f9',
+            cardLight: '#ffffff',
+            borderLight: '#e2e2e2',
+            textMain: '#1f1f1f',
+            backgroundDark: '#121212',
+            cardDark: '#1c1c1e',
+            textLight: '#eaeaea',
+            borderMuted: '#3a3a3c'
+          }
+        }
+      }
+    };
+  </script>
+</head>
+
+<body class="bg-backgroundLight dark:bg-backgroundDark text-textMain dark:text-textLight font-sans transition duration-300">
+
+  <header id="navbar" class="sticky top-0 z-10 p-6 border-b border-borderLight dark:border-borderMuted flex justify-between items-center shadow-sm bg-backgroundLight dark:bg-backgroundDark transition-all duration-300">
+    <a href="index.html" class="flex items-center">
+      <img src="assets/logo.png" alt="Logo" class="h-14 w-14 rounded-full object-contain border dark:border-borderMuted">
+    </a>
+    <nav class="space-x-6 text-base font-medium flex items-center">
+      <a href="index.html" class="pb-1 border-b-2 border-transparent hover:border-gray-400 dark:hover:border-gray-500 transition">Home</a>
+      <a href="about.html" class="pb-1 border-b-2 border-transparent hover:border-gray-400 dark:hover:border-gray-500 transition">About</a>
+      <a href="contact.html" class="pb-1 border-b-2 border-transparent hover:border-gray-400 dark:hover:border-gray-500 transition">Contact</a>
+      <button onclick="toggleDarkMode()" class="ml-6 w-14 h-7 bg-gray-300 dark:bg-borderMuted rounded-full relative">
+        <span id="toggleThumb" class="absolute left-1 top-1 w-5 h-5 bg-white dark:bg-gray-900 rounded-full flex items-center justify-center transition-transform duration-300 text-gray-700 dark:text-gray-300">
+          <svg id="iconSVG" xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <circle cx="12" cy="12" r="4" />
+          </svg>
+        </span>
+      </button>
+    </nav>
+  </header>
+
+  <main class="max-w-xl mx-auto px-6 py-16">
+    <h2 class="text-4xl font-bold mb-8 text-center">Get in Touch</h2>
+
+    <form id="contactForm" class="space-y-6">
+      <div>
+        <label for="name" class="block text-sm font-medium mb-1">Name</label>
+        <input type="text" id="name" name="name" required
+          class="w-full p-3 border border-borderLight dark:border-borderMuted rounded-lg bg-cardLight dark:bg-cardDark text-textMain dark:text-textLight focus:outline-none focus:ring-2 focus:ring-gray-400 dark:focus:ring-gray-600 transition" />
+      </div>
+
+      <div>
+        <label for="email" class="block text-sm font-medium mb-1">Email</label>
+        <input type="email" id="email" name="email" required
+          class="w-full p-3 border border-borderLight dark:border-borderMuted rounded-lg bg-cardLight dark:bg-cardDark text-textMain dark:text-textLight focus:outline-none focus:ring-2 focus:ring-gray-400 dark:focus:ring-gray-600 transition" />
+      </div>
+
+      <div>
+        <label for="message" class="block text-sm font-medium mb-1">Message</label>
+        <textarea id="message" name="message" rows="5" required
+          class="w-full p-3 border border-borderLight dark:border-borderMuted rounded-lg bg-cardLight dark:bg-cardDark text-textMain dark:text-textLight focus:outline-none focus:ring-2 focus:ring-gray-400 dark:focus:ring-gray-600 transition"></textarea>
+      </div>
+
+      <div class="text-center">
+        <button type="submit" id="sendBtn"
+          class="px-6 py-2 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-lg hover:opacity-90 transition font-medium">
+          Send Message
+        </button>
+      </div>
+    </form>
+
+    <p id="feedback" class="mt-4 text-center"></p>
+  </main>
+
+  <footer class="text-center text-gray-500 dark:text-gray-500 py-6 border-t border-borderLight dark:border-borderMuted">
+    © 2025 Aditi Narolkar. All rights reserved.
+  </footer>
+
+  <script>
+    const thumb = document.getElementById('toggleThumb');
+    const icon = document.getElementById('iconSVG');
+    const moonSVG = `<path d="M21 12.79A9 9 0 1111.21 3a7 7 0 0010 9.79z"/>`;
+    const sunSVG = `<circle cx="12" cy="12" r="4"/>`;
+
+    function toggleDarkMode() {
+      const html = document.documentElement;
+      const isDark = html.classList.toggle('dark');
+      localStorage.theme = isDark ? 'dark' : 'light';
+      updateThumb();
+    }
+
+    function updateThumb() {
+      const isDark = document.documentElement.classList.contains('dark');
+      thumb.style.transform = isDark ? 'translateX(28px)' : 'translateX(0)';
+      icon.innerHTML = isDark ? moonSVG : sunSVG;
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const saved = localStorage.getItem('theme');
+      if (saved === 'dark') document.documentElement.classList.add('dark');
+      else if (saved === 'light') document.documentElement.classList.remove('dark');
+      updateThumb();
+    });
+
+    window.addEventListener("scroll", () => {
+      const nav = document.getElementById("navbar");
+      if (window.scrollY > 10) {
+        nav.classList.add("backdrop-blur", "bg-backgroundLight/80", "dark:bg-backgroundDark/80");
+      } else {
+        nav.classList.remove("backdrop-blur", "bg-backgroundLight/80", "dark:bg-backgroundDark/80");
+      }
+    });
+  </script>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
+    import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAfdOO63v41-3wtU_Nhr0MG1omTFbSgUc8",
+      authDomain: "aditi-narolkar-writes-6c990.firebaseapp.com",
+      projectId: "aditi-narolkar-writes-6c990",
+      storageBucket: "aditi-narolkar-writes-6c990.firebasestorage.app",
+      messagingSenderId: "888612506075",
+      appId: "1:888612506075:web:9a5b021d1cef4506b47ffe"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    const form = document.getElementById('contactForm');
+    const sendBtn = document.getElementById('sendBtn');
+    const feedback = document.getElementById('feedback');
+
+    form.addEventListener('submit', async e => {
+      e.preventDefault();
+      sendBtn.disabled = true;
+      sendBtn.textContent = 'Sending...';
+      feedback.textContent = '';
+
+      const name = form.name.value.trim();
+      const email = form.email.value.trim();
+      const message = form.message.value.trim();
+
+      try {
+        await addDoc(collection(db, 'contacts'), {
+          name, email, message,
+          submittedAt: serverTimestamp(),
+          read: false
+        });
+        feedback.textContent = 'Thank you! Your message has been sent.';
+        form.reset();
+      } catch (err) {
+        console.error(err);
+        feedback.textContent = 'Error sending message. Please try again.';
+      } finally {
+        sendBtn.disabled = false;
+        sendBtn.textContent = 'Send Message';
+      }
+    });
+  </script>
+</body>
+</html>

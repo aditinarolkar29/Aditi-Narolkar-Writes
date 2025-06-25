@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en" class="transition duration-300">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Aditi Narolkar Writes</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            backgroundLight: '#f9f9f9',
+            cardLight: '#ffffff',
+            borderLight: '#e2e2e2',
+            textMain: '#1f1f1f',
+            backgroundDark: '#121212',
+            cardDark: '#1c1c1e',
+            textLight: '#eaeaea',
+            borderMuted: '#3a3a3c'
+          }
+        }
+      }
+    };
+  </script>
+</head>
+
+<body class="bg-backgroundLight dark:bg-backgroundDark text-textMain dark:text-textLight font-sans transition duration-300">
+
+  <header id="navbar" class="sticky top-0 z-10 p-6 border-b border-borderLight dark:border-borderMuted flex justify-between items-center shadow-sm bg-backgroundLight dark:bg-backgroundDark transition-all duration-300">
+    <a href="/admin/dashboard.html" class="flex items-center">
+      <img src="assets/logo.png" alt="Logo" class="h-14 w-14 rounded-full object-contain border dark:border-borderMuted">
+    </a>
+    <nav class="space-x-6 text-base font-medium flex items-center">
+      <a href="index.html" class="pb-1 border-b-2 border-transparent hover:border-gray-400 dark:hover:border-gray-500 transition">Home</a>
+      <a href="about.html" class="pb-1 border-b-2 border-transparent hover:border-gray-400 dark:hover:border-gray-500 transition">About</a>
+      <a href="contact.html" class="pb-1 border-b-2 border-transparent hover:border-gray-400 dark:hover:border-gray-500 transition">Contact</a>
+      <button onclick="toggleDarkMode()" class="ml-6 w-14 h-7 bg-gray-300 dark:bg-borderMuted rounded-full relative">
+        <span id="toggleThumb" class="absolute left-1 top-1 w-5 h-5 bg-white dark:bg-gray-900 rounded-full flex items-center justify-center transition-transform duration-300 text-gray-700 dark:text-gray-300">
+          <svg id="iconSVG" xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <circle cx="12" cy="12" r="4" />
+          </svg>
+        </span>
+      </button>
+    </nav>
+  </header>
+
+  <section class="text-center py-16 px-4">
+    <h4 class="text-3xl font-bold mb-4">Aditi Narolkar Writes</h4>
+    <p class="text-lg text-gray-600 dark:text-gray-400 max-w-xl mx-auto">
+      Dive deeper into the quiet corners of my mind...
+    </p>
+  </section>
+
+  <section class="max-w-3xl mx-auto px-4 mb-4">
+    <input id="searchInput" type="text" placeholder="Search title or #tag"
+      class="w-full p-3 rounded border border-borderLight dark:border-borderMuted bg-cardLight dark:bg-cardDark text-textMain dark:text-textLight focus:outline-none focus:ring-2 focus:ring-gray-400 dark:focus:ring-gray-600 transition" />
+  </section>
+
+  <section id="postGrid" class="max-w-5xl mx-auto px-4 py-10 grid gap-6 md:grid-cols-3"></section>
+
+  <div id="loading" class="text-center text-gray-400 py-6 hidden">Loading more posts...</div>
+
+  <footer class="text-center text-gray-500 dark:text-gray-500 py-6 border-t border-borderLight dark:border-borderMuted">
+    © 2025 Aditi Narolkar. All rights reserved.
+  </footer>
+
+  <script>
+    const thumb = document.getElementById('toggleThumb');
+    const icon = document.getElementById('iconSVG');
+    const moonSVG = `<path d="M21 12.79A9 9 0 1111.21 3a7 7 0 0010 9.79z"/>`;
+    const sunSVG = `<circle cx="12" cy="12" r="4"/>`;
+
+    function toggleDarkMode() {
+      const html = document.documentElement;
+      const isDark = html.classList.toggle('dark');
+      localStorage.theme = isDark ? 'dark' : 'light';
+      updateThumb();
+    }
+
+    function updateThumb() {
+      const isDark = document.documentElement.classList.contains('dark');
+      thumb.style.transform = isDark ? 'translateX(28px)' : 'translateX(0)';
+      icon.innerHTML = isDark ? moonSVG : sunSVG;
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const saved = localStorage.getItem('theme');
+      if (saved === 'dark') document.documentElement.classList.add('dark');
+      else if (saved === 'light') document.documentElement.classList.remove('dark');
+      updateThumb();
+    });
+
+    window.addEventListener('scroll', () => {
+      const nav = document.getElementById('navbar');
+      if (window.scrollY > 10) {
+        nav.classList.add("backdrop-blur", "bg-backgroundLight/80", "dark:bg-backgroundDark/80");
+      } else {
+        nav.classList.remove("backdrop-blur", "bg-backgroundLight/80", "dark:bg-backgroundDark/80");
+      }
+    });
+  </script>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
+    import {
+      getFirestore, collection, query, orderBy, limit, getDocs, startAfter
+    } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAfdOO63v41-3wtU_Nhr0MG1omTFbSgUc8",
+      authDomain: "aditi-narolkar-writes-6c990.firebaseapp.com",
+      projectId: "aditi-narolkar-writes-6c990",
+      storageBucket: "aditi-narolkar-writes-6c990.firebasestorage.app",
+      messagingSenderId: "888612506075",
+      appId: "1:888612506075:web:9a5b021d1cef4506b47ffe"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    const postGrid = document.getElementById("postGrid");
+    const loader = document.getElementById("loading");
+    const searchInput = document.getElementById("searchInput");
+
+    const POSTS_PER_PAGE = 6;
+    let allPosts = [];
+    let lastVisible = null;
+    let loading = false;
+    let noMorePosts = false;
+
+    async function loadPosts(initial = false) {
+      if (loading || noMorePosts) return;
+      loading = true;
+      loader.classList.remove("hidden");
+
+      try {
+        const postsRef = collection(db, "posts");
+        let q = query(postsRef, orderBy("date", "desc"), limit(POSTS_PER_PAGE));
+        if (lastVisible && !initial) {
+          q = query(postsRef, orderBy("date", "desc"), startAfter(lastVisible), limit(POSTS_PER_PAGE));
+        }
+
+        const snap = await getDocs(q);
+        if (snap.empty) {
+          noMorePosts = true;
+          loader.textContent = "No more posts.";
+          return;
+        }
+
+        lastVisible = snap.docs[snap.docs.length - 1];
+        const newPosts = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        allPosts = [...allPosts, ...newPosts];
+        renderPosts();
+      } catch (err) {
+        console.error("Error loading posts:", err);
+        loader.textContent = "Failed to load posts.";
+      } finally {
+        loading = false;
+        loader.classList.add("hidden");
+      }
+    }
+
+    function renderPosts() {
+      const keyword = searchInput.value.trim().toLowerCase();
+      let filtered = allPosts;
+
+      if (keyword.startsWith("#")) {
+        const tag = keyword.slice(1);
+        filtered = filtered.filter(post =>
+          Array.isArray(post.tags) && post.tags.some(t => t.toLowerCase() === tag)
+        );
+      } else if (keyword.length > 0) {
+        filtered = filtered.filter(post =>
+          post.title.toLowerCase().includes(keyword)
+        );
+      }
+
+      postGrid.innerHTML = '';
+      filtered.forEach(post => {
+        const words = post.content?.replace(/<[^>]+>/g, "").split(/\s+/).length || 0;
+        const readTime = Math.ceil(words / 200);
+
+        const card = document.createElement("a");
+        card.href = `post.html?slug=${post.id}`;
+        card.className = "block p-4 border rounded-lg hover:shadow-md transition bg-cardLight dark:bg-cardDark dark:border-borderMuted border-borderLight";
+        card.innerHTML = `
+          ${post.featuredImage ? `<img src="${post.featuredImage}" alt="${post.title}" class="w-full h-28 object-cover rounded mb-2">` : ""}
+          <h3 class="text-lg font-semibold mb-1 truncate" title="${post.title}">${post.title}</h3>
+          <div class="text-xs text-gray-500 dark:text-gray-400">${new Date(post.date).toLocaleDateString()} • ${readTime} min read</div>
+        `;
+        postGrid.appendChild(card);
+      });
+    }
+
+    searchInput.addEventListener("input", renderPosts);
+    window.addEventListener("DOMContentLoaded", () => loadPosts(true));
+    window.addEventListener("scroll", () => {
+      if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 500) {
+        loadPosts();
+      }
+    });
+  </script>
+</body>
+</html>

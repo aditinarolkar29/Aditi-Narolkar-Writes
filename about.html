@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en" class="transition duration-300">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>About – Aditi Narolkar</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            backgroundLight: '#f9f9f9',
+            cardLight: '#ffffff',
+            borderLight: '#e2e2e2',
+            textMain: '#1f1f1f',
+            backgroundDark: '#121212',
+            cardDark: '#1c1c1e',
+            textLight: '#eaeaea',
+            borderMuted: '#3a3a3c'
+          }
+        }
+      }
+    };
+  </script>
+</head>
+
+<body class="bg-backgroundLight dark:bg-backgroundDark text-textMain dark:text-textLight font-sans transition duration-300">
+  <header id="navbar" class="sticky top-0 z-10 p-6 border-b border-borderLight dark:border-borderMuted flex justify-between items-center shadow-sm bg-backgroundLight dark:bg-backgroundDark transition-all duration-300">
+    <a href="index.html" class="flex items-center">
+      <img src="assets/logo.png" alt="Logo" class="h-14 w-14 rounded-full object-contain border dark:border-borderMuted" />
+    </a>
+    <nav class="space-x-6 text-base font-medium flex items-center">
+      <a href="index.html" class="pb-1 border-b-2 border-transparent hover:border-gray-400 dark:hover:border-gray-500 transition">Home</a>
+      <a href="about.html" class="pb-1 border-b-2 border-transparent hover:border-gray-400 dark:hover:border-gray-500 transition">About</a>
+      <a href="contact.html" class="pb-1 border-b-2 border-transparent hover:border-gray-400 dark:hover:border-gray-500 transition">Contact</a>
+      <button onclick="toggleDarkMode()" class="ml-6 w-14 h-7 bg-gray-300 dark:bg-borderMuted rounded-full relative transition">
+        <span id="toggleThumb" class="absolute left-1 top-1 w-5 h-5 bg-white dark:bg-gray-900 rounded-full flex items-center justify-center transition-transform duration-300 text-gray-700 dark:text-gray-300">
+          <svg id="iconSVG" xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <circle cx="12" cy="12" r="4" />
+          </svg>
+        </span>
+      </button>
+    </nav>
+  </header>
+
+  <main class="max-w-3xl mx-auto px-6 py-16">
+    <h2 class="text-4xl font-bold mb-8 text-center">About Me</h2>
+    <div class="flex justify-center mb-8">
+      <img src="assets/pfp.png" alt="Aditi Narolkar" class="w-32 h-32 rounded-full object-cover border-2 border-gray-300 dark:border-borderMuted" />
+    </div>
+    <div class="text-lg text-gray-700 dark:text-gray-300 space-y-6 leading-relaxed">
+      <p>I'm Aditi — the kind of person who speaks less but feels a lot. While conversations tire me, writing revives me.</p>
+      <p>Writing isn’t planned; it just happens. Sometimes it’s a midnight rant, other times a quiet thought that needed somewhere to live.</p>
+      <p>This little space? It’s not curated, it’s real. It’s raw. It’s where my mind and thoughts finally find a home.</p>
+      <blockquote class="italic text-center text-gray-600 dark:text-gray-400 border-l-4 border-gray-400 dark:border-gray-500 pl-4">
+        “Some voices don’t echo in rooms, they unfold in paragraphs.”
+      </blockquote>
+    </div>
+  </main>
+
+  <footer class="text-center text-gray-500 dark:text-gray-500 py-6 border-t border-borderLight dark:border-borderMuted">
+    © 2025 Aditi Narolkar. All rights reserved.
+  </footer>
+
+  <script>
+    const thumb = document.getElementById('toggleThumb');
+    const icon = document.getElementById('iconSVG');
+    const moonSVG = `<path d="M21 12.79A9 9 0 1111.21 3a7 7 0 0010 9.79z"/>`;
+    const sunSVG = `<circle cx="12" cy="12" r="4"/>`;
+
+    function toggleDarkMode() {
+      const html = document.documentElement;
+      const isDark = html.classList.toggle('dark');
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
+      updateThumb();
+    }
+
+    function updateThumb() {
+      const isDark = document.documentElement.classList.contains('dark');
+      thumb.style.transform = isDark ? 'translateX(28px)' : 'translateX(0)';
+      icon.innerHTML = isDark ? moonSVG : sunSVG;
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const saved = localStorage.getItem('theme');
+      if (saved === 'dark') document.documentElement.classList.add('dark');
+      else if (saved === 'light') document.documentElement.classList.remove('dark');
+      updateThumb();
+    });
+
+    window.addEventListener("scroll", () => {
+      const nav = document.getElementById("navbar");
+      if (window.scrollY > 10) {
+        nav.classList.add("backdrop-blur", "bg-backgroundLight/80", "dark:bg-backgroundDark/80");
+      } else {
+        nav.classList.remove("backdrop-blur", "bg-backgroundLight/80", "dark:bg-backgroundDark/80");
+      }
+    });
+  </script>
+</body>
+</html>
